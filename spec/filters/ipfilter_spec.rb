@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 require "logstash/filters/ipfilter"
 
 describe LogStash::Filters::Ipfilter do
-  describe "Set to Hello World" do
+  describe "Set to some example cases" do
     let(:config) do <<-CONFIG
       filter {
         ipfilter {
