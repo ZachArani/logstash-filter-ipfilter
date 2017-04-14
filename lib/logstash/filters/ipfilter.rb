@@ -20,7 +20,7 @@ class LogStash::Filters::Ipfilter < LogStash::Filters::Base
   config_name "ipfilter"
   
   # Replace the message with this value.
-  config :message, :validate => :string, :default => "Hello World!"
+  config :message, :validate => :string, :default => "Hell o World!"
   
 
   public
