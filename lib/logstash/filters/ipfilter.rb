@@ -24,28 +24,28 @@ class LogStash::Filters::Ipfilter < LogStash::Filters::Base
   # Replace the message with this value.
   config :ipfilled, :validate => :string, :default => ""
   config :database, :validate => :string, :default => ""
-  config :aggregate_column, :validate => :string, :default => ""
-  config :aggregate_target, :validate => :string, :default => ""
+  config :search_column, :validate => :string, :default => ""
+  config :search_target, :validate => :string, :default => ""
     
 
   public
   def register
     # Add instance variables 
-    database = CSV.read('database.csv')
+    
   end # def register
 
   public
   def filter(event)
-    if @ipfilled && @database && @aggregate_column && @aggregate_target
+    if @ipfilled && @database && @search_column && @search_target
       ip = event.get(@ipfilled) 
-      database.foreach do |row|
+      CSV.foreach('database.csv', headers:true) do |row|
           subnet = row[0]
           if subnet[0..9] == ip[0..9]
-            event.set(event.get(@aggregate_target), event.get(@aggregate_target) << row[1]) #Attempt to append agency to already existing array
+            #event.set(event.get(@search_target), event.get(@search_target) << row[1]) #Attempt to append agency to already existing array
             event.set("[ipfilter_" << @ip_filled << "][ip]", ip)
-            event.set("[ipfilter_" << @ip_filled << "][network]", row[0])
-            event.set("[ipfilter_" << @ip_filled << "][agency]", row[1])
-            event.set("[ipfilter_" << @ip_filled << "][description]", row[2])
+            event.set("[ipfilter_" << @ip_filled << "][network]", subnet)
+            event.set("[ipfilter_" << @ip_filled << "][agency]", row[@search_column])
+            event.set("[ipfilter_" << @ip_filled << "][description]", row[@search_target])
           end
       end
     end

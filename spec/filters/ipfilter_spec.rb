@@ -17,7 +17,7 @@ describe LogStash::Filters::Ipfilter do
     end
 
     sample("source_ip" => "172.16.142.65") do
-      expect(subject).to include("iplookup_source_ip")
+		insist { subject.get("iplookup_source_ip") } != nil  
       # expect(subject.get('message')).to eq('Hello World')
     end
   end
