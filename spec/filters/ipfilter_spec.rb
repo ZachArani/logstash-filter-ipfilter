@@ -7,18 +7,23 @@ describe LogStash::Filters::Ipfilter do
     let(:config) do <<-CONFIG
       filter {
         ipfilter {
+           ipfilled => "source_ip"
+           database => "database.csv"
+           search_column => "agency"
+           search_target => "agencies"
+         }
+        ipfilter {
+          ipfilled => "destination_ip"
           database => "database.csv"
-          ip_filled => "source_ip"
-          aggregate_column => "agency"
-          aggregate_target => "agencies"
+          search_column => "agency"
+          search_target => "agencies"
         }
       }
     CONFIG
     end
 
-    sample("source_ip" => "172.16.142.65") do
-		insist { subject.get("iplookup_source_ip") } != nil  
-      # expect(subject.get('message')).to eq('Hello World')
+     sample("message" => "source_ip: 172.16.142.65, destination_ip: 172.16.144.15") do
+       expect(subject.get("agencies")).to eq(["agency", "foo"])
     end
   end
 end
